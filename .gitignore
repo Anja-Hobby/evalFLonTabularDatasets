@@ -1,0 +1,5 @@
+data/
+outputs/
+datasets/ocular_disease_recognition/
+datasets/ocular_disease_recognition_preprepped/
+results/
