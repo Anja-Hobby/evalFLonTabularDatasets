@@ -1,0 +1,2 @@
+directory: neural-net/results/2027-07-01/gridsearchNN # Path to the directory containing the data
+resulting_file_name: analyze.txt # Name of the resulting file
