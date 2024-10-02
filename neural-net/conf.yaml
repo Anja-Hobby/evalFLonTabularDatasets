@@ -1,0 +1,208 @@
+use_smote: True           #Smote will be checked first. Smote should be used if the dataset is too small to train the model if undersampling is used.
+use_undersample: False  #If smote is False, undersampling will be checked. Undersampling should be used if the dataset is large.
+# If neither Smote nor undersampling is used, the data will be used as is.
+valratio_clients: 0.1
+
+num_rounds: [20]
+# num_clients is not used in analyze.py.
+num_clients: [5, 10, 20]
+
+dataset:
+  location: diabetes/diabetes.csv
+  target: Diabetes_binary
+
+#dataset:
+#  location: datasets/covid-19/mexico_covid19.csv
+#  target: RESULTADO
+
+# currentData = DatasetLoader('diabetes/diabetes.csv', 'Diabetes_binary')
+# currentData = DatasetLoader('fetal_health/fetal_health.csv', 'fetal_health')
+# currentData = DatasetLoader('datasets/heart2/framingham.csv', 'TenYearCHD')
+
+model:
+  lr: [0.00001] # typically around 1e-3 to 1e-4
+  batch_size: [8] 
+  momentum: [0.3] #usually between 0.1 and 0.9
+  local_epochs: [1, 5] # number of rounds run locally
+  use_dp: [True]
+  noise_multiplier: [0.75] # typically ranges from 0.1 - 2.0
+  max_grad_norm: [2] #typically ranges 0.1-10
+  layers: [5] # number of layers; only 3, 4 or 5 otherwise crashses.
+
+#strategy is not used in analyze.py
+strategy: # fedavg
+  name: FedAvg
+  lr: [0.01] # [0.01, 0.001, 0.0001]
+  momentum: [0.9] # [0.9, 0.5, 0.1]
+  local_epochs: [1] # [1, 2, 3, 4, 5]
+
+# # 5 clients fedavg
+# strategy: # fedavg
+#   name: FedAvg
+#   lr: [0.0003, 0.0001, 0.00003]
+#   momentum: [0.05, 0.1, 0.15, 0.20, 0.25, 0.30, 0.35]
+#   local_epochs: [1]
+
+# # 10 clients fedavg
+# strategy: # fedavg
+#   name: FedAvg
+#   lr: [0.003, 0.001, 0.0003]
+#   momentum: [0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70]
+#   local_epochs: [1]
+
+# # 20 clients fedavg
+# strategy: # fedavg
+#   name: FedAvg
+#   lr: [0.03, 0.01, 0.003]
+#   momentum: [0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95, 1.0]
+#   local_epochs: [1]
+
+# strategy: # fedadagrad
+#   name: FedAdagrad
+#   eta: [0.1] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.1] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   tau: [0.000000001] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+
+# 5, 10 en 20 clients
+# strategy: # fedadagrad
+#   name: FedAdagrad
+#   eta: [0.03, 0.01, 0.003] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   tau: [0.00000003, 0.00000001, 0.000000003] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+
+# strategy: # fedadam
+#   name: FedAdam
+#   eta: [0.01] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.01] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.9] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.99] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.000000001] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+
+# 5 clients
+# strategy: # fedadam
+#   name: FedAdam
+#   eta: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.00003] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.3, 0.4, 0.5, 0.6, 0.7] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.95, 0.99, 0.995] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.0000003, 0.0000001, 0.00000003] # server-side learningrate decay. defaults to 0.000000001
+
+# 10 clients
+# strategy: # fedadam
+#   name: FedAdam
+#   eta: [0.3, 0.1, 0.03] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.00003] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.7, 0.8, 0.9, 0.95, 1] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.5, 0.9, 0.95] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.0000003, 0.0000001, 0.00000003] # server-side learningrate decay. defaults to 0.000000001
+
+# 20 clients
+# strategy: # fedadam
+#   name: FedAdam
+#   eta: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.00003] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.7, 0.8, 0.9, 0.95, 1] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.95, 0.99, 0.995] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.00000003, 0.00000001, 0.000000003] # server-side learningrate decay. defaults to 0.000000001
+
+# strategy: #fedyogi
+#   name: FedYogi
+#   eta: [0.01] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.01
+#   eta_l: [0.01] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.0316
+#   beta_1: [0.9] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.99] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.001] # [0.01, 0.001, 0.0001, 0.00001] # controls the degree of adaptability. defaults to 0.001
+
+# strategy: #fedyogi 5 clients
+#   name: FedYogi
+#   eta: [0.5, 0.4, 0.3, 0.2] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.01
+#   eta_l: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.0316
+#   beta_1: [0.7, 0.6, 0.5, 0.4, 0.3] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.995, 0.99, 0.95] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.1, 0.03, 0.01, 0.003] # [0.01, 0.001, 0.0001, 0.00001] # controls the degree of adaptability. defaults to 0.001
+# strategy: #fedyogi 10 clients
+#   name: FedYogi
+#   eta: [0.5, 0.4, 0.3, 0.2] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.01
+#   eta_l: [0.5, 0.3, 0.1] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.0316
+#   beta_1: [0.3, 0.2, 0.1, 0.05]  # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.9995, 0.999, 0.995] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.003, 0.001, 0.0003] # [0.01, 0.001, 0.0001, 0.00001] # controls the degree of adaptability. defaults to 0.001
+# strategy: #fedyogi 20 clients
+#   name: FedYogi
+#   eta: [0.2, 0.1, 0.05] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.01
+#   eta_l: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.0316
+#   beta_1: [0.3, 0.2, 0.1, 0.05]  # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.95, 0.9, 0.5] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.0003, 0.0001, 0.00003] # [0.01, 0.001, 0.0001, 0.00001] # controls the degree of adaptability. defaults to 0.001
+
+
+# strategy: #fedavgm
+#   name: FedAvgM
+#   server_learning_rate: [1.0] # [1.0, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 1.0
+#   server_momentum: [0.0] # [0.0, 0.9, 0.99] # server-side momentum. defaults to 0.0
+# strategy: #fedavgm 5 clients
+#   name: FedAvgM
+#   server_learning_rate: [0.003, 0.001, 0.0003, 0.00001] # [1.0, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 1.0
+#   server_momentum: [0.7, 0.8, 0.9, 0.95] # [0.0, 0.9, 0.99] # server-side momentum. defaults to 0.0
+# strategy: #fedavgm 10 clients
+#   name: FedAvgM
+#   server_learning_rate: [0.3, 0.1, 0.03] # [1.0, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 1.0
+#   server_momentum: [0.1, 0.2, 0.3, 0.4, 0.5] # [0.0, 0.9, 0.99] # server-side momentum. defaults to 0.0
+# strategy: #fedavgm 20 clients
+#   name: FedAvgM
+#   server_learning_rate: [0.003, 0.001, 0.0003, 0.00001] # [1.0, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 1.0
+#   server_momentum: [0.7, 0.8, 0.9, 0.95] # [0.0, 0.9, 0.99] # server-side momentum. defaults to 0.0
+
+# strategy: #FedTrimmedAvg 5, 10, 20 clients
+#   name: FedTrimmedAvg
+#   beta: [0, 0.05, 0.1, 0.15] # [0.1, 0.2, 0.3, 0.4, 0.5] # fraction to cut off of both tails of the distribution. Defaults to 0.2
+
+# strategy: #fedprox 5, 10, 20 clients
+#   name: FedProx
+#   proximal_mu: [2.0, 1.0, 0.6, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001, 0.0003, 0.0001, 0.00003, 0.00001] # proximal term. Defaults to 0.1. 0.0 would be equal to fedavg
+
+# strategy: #fedMedian
+#   name: FedMedian
+
+# strategy: #fedOpt
+#   name: FedOpt
+#   eta: [0.01] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.01] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.9] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.99] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.000000001] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+
+# strategy: #fedOpt 5 clients
+#   name: FedOpt
+#   eta: [1.0, 0.6, 0.3, 0.2] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   beta_1: [1, 0.95, 0.9, 0.8, 0.7] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.995, 0.999, 0.9995] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.0000003, 0.0000001, 0.00000003]  # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+# strategy: #fedOpt 10 clients
+#   name: FedOpt
+#   eta: [0.03, 0.01, 0.003] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.003, 0.001, 0.0003, 0.0001] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.3, 0.2, 0.1, 0.05, 0.0] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.995, 0.999, 0.9995, 0.9999] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.00000003, 0.00000001, 0.000000003] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+# strategy: #fedOpt 20 clients
+#   name: FedOpt
+#   eta: [0.003, 0.001, 0.0003, 0.0001] # [0.3, 0.1, 0.01, 0.001] # server-side learningrate. defaults to 0.1
+#   eta_l: [0.2, 0.3, 0.5, 1.0] # [0.3, 0.1, 0.01, 0.001] # client-side learningrate. defaults to 0.1
+#   beta_1: [0.1] # [0.9, 0.5, 0.1] momentum parameter. defaults to 0.9
+#   beta_2: [0.995, 0.999, 0.9995, 0.9999] # [0.999, 0.99, 0.9] second momentum parameter. Defaults to 0.99
+#   tau: [0.000000003, 0.000000001, 0.0000000003, 0.0000000001] # [0.00000001, 0.000000001, 0.00000001, 0.0000001] # server-side learningrate decay. defaults to 0.000000001
+
+### server PC start onderaan
+
+
+debugging:
+  client: False
+  datasets: False
+  main: False
+  mia: False
+  model: False
+  plot: False
+  save: False
+  server: False
